@@ -1,0 +1,54 @@
+name: Template CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  render-and-test:
+    name: Render & test (Python ${{ matrix.python_version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python_version: ["3.11", "3.12", "3.13", "3.14"]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0 # Copier reads git tags
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+        with:
+          enable-cache: true
+          cache-dependency-glob: copier.yml
+
+      - name: Render template
+        # --vcs-ref HEAD renders the commit under test instead of the latest tag
+        run: >-
+          uvx copier copy --defaults --vcs-ref HEAD
+          --data project_name=demo-app
+          --data author_name=CI
+          --data author_email=ci@example.com
+          --data github_username=ci
+          --data python_version=${{ matrix.python_version }}
+          . "$RUNNER_TEMP/demo-app"
+
+      - name: Test generated project
+        working-directory: ${{ runner.temp }}/demo-app
+        run: |
+          git init -q
+          git add -A
+          uv lock
+          uv sync --locked
+          uv run --locked pytest
+          uv run --locked pre-commit run --all-files --show-diff-on-failure

@@ -20,7 +20,7 @@ uv sync                      # create .venv and install the project + dev tools
 uv run pre-commit install    # enable git hooks
 ```
 
-Commit the generated `uv.lock` file so every environment (and CI) resolves the same versions.
+**Commit the generated `uv.lock` file.** CI runs with `--locked`, so it fails if the lockfile is missing or out of sync with `pyproject.toml` (the `uv-lock` pre-commit hook keeps it updated locally).
 
 ## Development
 
@@ -31,6 +31,7 @@ Commit the generated `uv.lock` file so every environment (and CI) resolves the s
 | Lint                      | `uv run ruff check .`                     |
 | Lint and autofix          | `uv run ruff check --fix .`               |
 | Format                    | `uv run ruff format .`                    |
+| Type check (strict)       | `uv run mypy`                             |
 | Run all pre-commit hooks  | `uv run pre-commit run --all-files`       |
 | Update hook versions      | `uv run pre-commit autoupdate`            |
 | Add a dependency          | `uv add <package>`                        |
@@ -42,10 +43,12 @@ Tests fail if coverage drops below **{{ coverage_threshold }}%** (`[tool.coverag
 
 ```
 {{ project_name }}/
-├── .github/workflows/ci.yml   # CI: lint + tests on Python {{ python_version }}–3.14
+├── .github/
+│   ├── dependabot.yml          # weekly updates: actions, uv deps, pre-commit hooks
+│   └── workflows/ci.yml        # CI: lint + tests on Python {{ python_version }}–3.14
 ├── src/{{ package_name }}/     # package source code
 ├── tests/                      # pytest test suite
-├── .pre-commit-config.yaml     # git hooks (ruff, formatting, uv lock)
+├── .pre-commit-config.yaml     # git hooks (ruff, mypy, formatting, uv lock)
 ├── pyproject.toml              # metadata, dependencies and tool configuration
 └── LICENSE
 ```
@@ -54,8 +57,10 @@ Tests fail if coverage drops below **{{ coverage_threshold }}%** (`[tool.coverag
 
 GitHub Actions runs on every push to `main` and on every pull request:
 
-- **Lint**: all pre-commit hooks (ruff check, ruff format, file hygiene).
+- **Lint**: all pre-commit hooks (ruff check, ruff format, mypy `--strict`, file hygiene).
 - **Test**: `pytest` with coverage on every supported Python version; the `coverage.xml` report is uploaded as a build artifact.
+
+Both jobs install dependencies with `uv sync --locked`. Actions are pinned to commit SHAs (with the version in a comment) and [Dependabot](.github/dependabot.yml) opens weekly PRs to update actions, Python dependencies and pre-commit hooks.
 
 ## Updating from the template
 

@@ -68,7 +68,7 @@ python_version:
     - "3.12"
     - "3.13"
     - "3.14"
-  default: "3.12"
+  default: "3.14"
 
 coverage_threshold:
   type: int
@@ -83,4 +83,7 @@ copyright_year:
   type: str
   help: Copyright year for the MIT license
   default: "{{ '%Y' | strftime }}"
-  when: false
+  validator: >-
+    {% if not (copyright_year | regex_search('^\d{4}$')) %}
+    Must be a 4-digit year
+    {% endif %}

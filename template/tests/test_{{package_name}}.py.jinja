@@ -1,5 +1,7 @@
+from importlib.metadata import version
+
 import {{ package_name }}
 
 
-def test_version_is_defined() -> None:
-    assert {{ package_name }}.__version__ == "0.1.0"
+def test_version_matches_package_metadata() -> None:
+    assert {{ package_name }}.__version__ == version("{{ project_name }}")
