@@ -69,17 +69,9 @@ uv run pre-commit run --all-files    # everything above plus file hygiene
 ## Pull requests
 
 1. Keep PRs small and focused on one change.
-2. Fill in the [pull request template](.github/pull_request_template.md).
+2. Fill in the [pull request template](.github/pull_request_template.md); its checklist is the single source of truth for what a PR needs.
 3. Add an entry under `## [Unreleased]` in [CHANGELOG.md](CHANGELOG.md) for user-facing changes.
 4. For significant design decisions, add an [ADR](docs/adr/README.md).
-
-### PR checklist
-
-- [ ] Tests added or updated, and `uv run pytest` passes
-- [ ] `uv run pre-commit run --all-files` passes (ruff, mypy, file hygiene)
-- [ ] `CHANGELOG.md` updated under `[Unreleased]`
-- [ ] Documentation and ADRs updated if needed
-- [ ] Breaking changes are documented in the commit message and changelog
 
 ## Reporting bugs and vulnerabilities
 

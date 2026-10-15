@@ -82,14 +82,21 @@ uvx copier update
 
 ## Versioning
 
-The template is versioned with [SemVer](https://semver.org/) git tags (`v0.1.0`, …). Copier uses the latest tag for `copy` and `update`, which is what lets `copier update` compute a clean diff between template versions. To release a change:
+The template is versioned with [SemVer](https://semver.org/) git tags (`v0.1.0`, …) and every release is described in [CHANGELOG.md](CHANGELOG.md). Copier uses the latest tag **on the remote** for `copy` and `update`, which is what lets `copier update` compute a clean diff between template versions. To release a change:
 
-```bash
-git tag v0.2.0
-git push --tags
-```
+1. Move the `[Unreleased]` entries in `CHANGELOG.md` to a new `[X.Y.Z] - YYYY-MM-DD` section.
+2. Commit, create an **annotated** tag and push the commit together with the tag:
 
-Without tags Copier falls back to `HEAD` and warns `No git tags found in template`.
+   ```bash
+   git tag -a vX.Y.Z -m "vX.Y.Z"
+   git push --follow-tags
+   ```
+
+   `--follow-tags` only pushes annotated tags; a lightweight tag (`git tag vX.Y.Z`) stays local unless you run `git push --tags`.
+
+Without tags on the remote Copier falls back to `HEAD` and warns `No git tags found in template`.
+
+Design decisions about the template itself are recorded as ADRs in [`docs/adr/`](docs/adr/README.md).
 
 ## Template repository layout
 
@@ -98,8 +105,10 @@ python-project-template/
 ├── .github/
 │   ├── dependabot.yml             # keeps the template's own CI actions updated
 │   └── workflows/template-ci.yml  # renders the template and tests the result
+├── docs/adr/                      # decisions about the template itself (MADR 4)
 ├── copier.yml                     # questions and Copier settings
 ├── template/                      # files rendered into the generated project (*.jinja are templated)
+├── CHANGELOG.md                   # template releases (Keep a Changelog + SemVer)
 ├── LICENSE
 └── README.md
 ```
