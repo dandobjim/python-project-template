@@ -1,0 +1,86 @@
+# Copier template: standard Python project (uv + ruff + pytest + pre-commit + GitHub Actions)
+# Docs: https://copier.readthedocs.io/en/stable/
+
+_min_copier_version: "9.0.0"
+_subdirectory: template
+_templates_suffix: .jinja
+_answers_file: .copier-answers.yml
+
+_message_after_copy: |
+  Project "{{ project_name }}" created at {{ _copier_conf.dst_path }}
+
+  Next steps:
+    cd {{ _copier_conf.dst_path }}
+    git init
+    uv sync
+    uv run pre-commit install
+    uv run pytest
+
+# ---------------------------------------------------------------------------
+# Questions
+# ---------------------------------------------------------------------------
+
+project_name:
+  type: str
+  help: Project name (used as the distribution name, e.g. my-awesome-project)
+  validator: >-
+    {% if not (project_name | regex_search('^[A-Za-z][A-Za-z0-9._-]*$')) %}
+    Must start with a letter and contain only letters, digits, '.', '_' or '-'
+    {% endif %}
+
+package_name:
+  type: str
+  help: Python import package name (snake_case)
+  default: "{{ project_name | lower | replace('-', '_') | replace('.', '_') }}"
+  validator: >-
+    {% if not (package_name | regex_search('^[a-z][a-z0-9_]*$')) %}
+    Must be lowercase snake_case and start with a letter
+    {% endif %}
+
+project_description:
+  type: str
+  help: Short project description
+  default: A Python project
+
+author_name:
+  type: str
+  help: Author full name
+  validator: "{% if not author_name.strip() %}Author name is required{% endif %}"
+
+author_email:
+  type: str
+  help: Author email
+  validator: >-
+    {% if not (author_email | regex_search('^[^@\s]+@[^@\s]+\.[^@\s]+$')) %}
+    Must be a valid email address
+    {% endif %}
+
+github_username:
+  type: str
+  help: GitHub user or organization that will host the repository
+  validator: "{% if not github_username.strip() %}GitHub username is required{% endif %}"
+
+python_version:
+  type: str
+  help: Minimum supported Python version (CI tests from this version up to 3.14)
+  choices:
+    - "3.11"
+    - "3.12"
+    - "3.13"
+    - "3.14"
+  default: "3.12"
+
+coverage_threshold:
+  type: int
+  help: Minimum test coverage percentage (pytest fails below it)
+  default: 80
+  validator: >-
+    {% if coverage_threshold < 0 or coverage_threshold > 100 %}
+    Must be between 0 and 100
+    {% endif %}
+
+copyright_year:
+  type: str
+  help: Copyright year for the MIT license
+  default: "{{ '%Y' | strftime }}"
+  when: false

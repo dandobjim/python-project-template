@@ -1,0 +1,70 @@
+# {{ project_name }}
+
+[![CI](https://github.com/{{ github_username }}/{{ project_name }}/actions/workflows/ci.yml/badge.svg)](https://github.com/{{ github_username }}/{{ project_name }}/actions/workflows/ci.yml)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+{{ project_description }}
+
+## Requirements
+
+- Python >= {{ python_version }}
+- [uv](https://docs.astral.sh/uv/)
+
+## Getting started
+
+```bash
+git init                     # if the project is not a git repository yet
+uv sync                      # create .venv and install the project + dev tools
+uv run pre-commit install    # enable git hooks
+```
+
+Commit the generated `uv.lock` file so every environment (and CI) resolves the same versions.
+
+## Development
+
+| Task                      | Command                                   |
+| ------------------------- | ----------------------------------------- |
+| Run tests (with coverage) | `uv run pytest`                           |
+| HTML coverage report      | `uv run pytest --cov-report=html`         |
+| Lint                      | `uv run ruff check .`                     |
+| Lint and autofix          | `uv run ruff check --fix .`               |
+| Format                    | `uv run ruff format .`                    |
+| Run all pre-commit hooks  | `uv run pre-commit run --all-files`       |
+| Update hook versions      | `uv run pre-commit autoupdate`            |
+| Add a dependency          | `uv add <package>`                        |
+| Add a dev dependency      | `uv add --dev <package>`                  |
+
+Tests fail if coverage drops below **{{ coverage_threshold }}%** (`[tool.coverage.report] fail_under` in `pyproject.toml`).
+
+## Project structure
+
+```
+{{ project_name }}/
+├── .github/workflows/ci.yml   # CI: lint + tests on Python {{ python_version }}–3.14
+├── src/{{ package_name }}/     # package source code
+├── tests/                      # pytest test suite
+├── .pre-commit-config.yaml     # git hooks (ruff, formatting, uv lock)
+├── pyproject.toml              # metadata, dependencies and tool configuration
+└── LICENSE
+```
+
+## Continuous integration
+
+GitHub Actions runs on every push to `main` and on every pull request:
+
+- **Lint**: all pre-commit hooks (ruff check, ruff format, file hygiene).
+- **Test**: `pytest` with coverage on every supported Python version; the `coverage.xml` report is uploaded as a build artifact.
+
+## Updating from the template
+
+This project was generated with [Copier](https://copier.readthedocs.io/). To pull in template updates:
+
+```bash
+uvx copier update
+```
+
+## License
+
+Distributed under the [MIT License](LICENSE). © {{ copyright_year }} {{ author_name }}
