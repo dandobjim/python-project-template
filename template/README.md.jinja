@@ -1,74 +1,111 @@
+{%- set repo_url = "https://github.com/" ~ github_username ~ "/" ~ project_name -%}
 # {{ project_name }}
 
-[![CI](https://github.com/{{ github_username }}/{{ project_name }}/actions/workflows/ci.yml/badge.svg)](https://github.com/{{ github_username }}/{{ project_name }}/actions/workflows/ci.yml)
+[![CI]({{ repo_url }}/actions/workflows/ci.yml/badge.svg)]({{ repo_url }}/actions/workflows/ci.yml)
+[![Coverage](https://codecov.io/gh/{{ github_username }}/{{ project_name }}/branch/main/graph/badge.svg)](https://codecov.io/gh/{{ github_username }}/{{ project_name }})
+[![Python](https://img.shields.io/badge/python-{{ python_version }}%2B-blue.svg)](https://www.python.org/downloads/)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
+## Overview
+
 {{ project_description }}
 
-## Requirements
+<!-- Describe the problem this project solves, who it is for and how it fits in a bigger system. -->
 
-- Python >= {{ python_version }}
-- [uv](https://docs.astral.sh/uv/)
+## Features
 
-## Getting started
+<!-- List the main capabilities. Keep each bullet short and user-facing. -->
+
+- Feature one
+- Feature two
+
+## Quickstart
+
+Requirements: Python >= {{ python_version }} and [uv](https://docs.astral.sh/uv/).
 
 ```bash
-git init                     # if the project is not a git repository yet
-uv sync                      # create .venv and install the project + dev tools
-uv run pre-commit install    # enable git hooks
+git clone {{ repo_url }}.git
+cd {{ project_name }}
+uv sync
 ```
 
-**Commit the generated `uv.lock` file.** CI runs with `--locked`, so it fails if the lockfile is missing or out of sync with `pyproject.toml` (the `uv-lock` pre-commit hook keeps it updated locally).
+```python
+import {{ package_name }}
+
+print({{ package_name }}.__version__)
+```
+
+## Configuration
+
+Project and tool settings live in [`pyproject.toml`](pyproject.toml): dependencies, Ruff, mypy, pytest and coverage.
+
+<!-- Document runtime configuration here. Example: -->
+
+| Variable    | Description             | Default |
+| ----------- | ----------------------- | ------- |
+| `LOG_LEVEL` | Application log level   | `INFO`  |
 
 ## Development
 
-| Task                      | Command                                   |
-| ------------------------- | ----------------------------------------- |
-| Run tests (with coverage) | `uv run pytest`                           |
-| HTML coverage report      | `uv run pytest --cov-report=html`         |
-| Lint                      | `uv run ruff check .`                     |
-| Lint and autofix          | `uv run ruff check --fix .`               |
-| Format                    | `uv run ruff format .`                    |
-| Type check (strict)       | `uv run mypy`                             |
-| Run all pre-commit hooks  | `uv run pre-commit run --all-files`       |
-| Update hook versions      | `uv run pre-commit autoupdate`            |
-| Add a dependency          | `uv add <package>`                        |
-| Add a dev dependency      | `uv add --dev <package>`                  |
+```bash
+uv sync                      # create .venv and install the project + dev tools
+uv run pre-commit install    # run checks automatically on every commit
+```
+
+**Commit `uv.lock`.** CI installs with `--locked`, so it fails if the lockfile is missing or out of sync with `pyproject.toml` (the `uv-lock` pre-commit hook keeps it updated locally).
+
+| Task                     | Command                             |
+| ------------------------ | ----------------------------------- |
+| Lint                     | `uv run ruff check .`               |
+| Lint and autofix         | `uv run ruff check --fix .`         |
+| Format                   | `uv run ruff format .`              |
+| Type check (strict)      | `uv run mypy`                       |
+| Run all pre-commit hooks | `uv run pre-commit run --all-files` |
+| Update hook versions     | `uv run pre-commit autoupdate`      |
+| Add a dependency         | `uv add <package>`                  |
+| Add a dev dependency     | `uv add --dev <package>`            |
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for branch naming, commit conventions and the PR checklist.
+
+## Testing
+
+| Task                       | Command                           |
+| -------------------------- | --------------------------------- |
+| Run tests with coverage    | `uv run pytest`                   |
+| HTML coverage report       | `uv run pytest --cov-report=html` |
+| Run a single test          | `uv run pytest tests/path.py::test_name` |
 
 Tests fail if coverage drops below **{{ coverage_threshold }}%** (`[tool.coverage.report] fail_under` in `pyproject.toml`).
-
-## Project structure
-
-```
-{{ project_name }}/
-├── .github/
-│   ├── dependabot.yml          # weekly updates: actions, uv deps, pre-commit hooks
-│   └── workflows/ci.yml        # CI: lint + tests on Python {{ python_version }}–3.14
-├── src/{{ package_name }}/     # package source code
-├── tests/                      # pytest test suite
-├── .pre-commit-config.yaml     # git hooks (ruff, mypy, formatting, uv lock)
-├── pyproject.toml              # metadata, dependencies and tool configuration
-└── LICENSE
-```
-
-## Continuous integration
 
 GitHub Actions runs on every push to `main` and on every pull request:
 
 - **Lint**: all pre-commit hooks (ruff check, ruff format, mypy `--strict`, file hygiene).
-- **Test**: `pytest` with coverage on every supported Python version; the `coverage.xml` report is uploaded as a build artifact.
+- **Test**: `pytest` on every supported Python version ({{ python_version }}–3.14); coverage is uploaded to [Codecov](https://codecov.io/gh/{{ github_username }}/{{ project_name }}).
 
-Both jobs install dependencies with `uv sync --locked`. Actions are pinned to commit SHAs (with the version in a comment) and [Dependabot](.github/dependabot.yml) opens weekly PRs to update actions, Python dependencies and pre-commit hooks.
+Actions are pinned to commit SHAs and [Dependabot](.github/dependabot.yml) opens weekly PRs to update actions, Python dependencies and pre-commit hooks.
 
-## Updating from the template
+## Architecture
 
-This project was generated with [Copier](https://copier.readthedocs.io/). To pull in template updates:
+Significant design decisions are recorded as [Architecture Decision Records](docs/adr/README.md) using the [MADR](https://adr.github.io/madr/) format.
 
-```bash
-uvx copier update
 ```
+{{ project_name }}/
+├── .github/                # CI workflow, Dependabot, PR template
+├── docs/adr/               # architecture decision records
+├── src/{{ package_name }}/ # package source code
+├── tests/                  # pytest test suite
+└── pyproject.toml          # metadata, dependencies and tool configuration
+```
+
+## Project docs
+
+- [CONTRIBUTING.md](CONTRIBUTING.md): how to set up, branch, commit and open PRs
+- [CHANGELOG.md](CHANGELOG.md): notable changes per release
+- [SECURITY.md](SECURITY.md): how to report vulnerabilities
+
+This project was generated with [Copier](https://copier.readthedocs.io/). Pull in template updates with `uvx copier update`.
 
 ## License
 

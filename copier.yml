@@ -16,6 +16,10 @@ _message_after_copy: |
     uv run pre-commit install
     uv run pytest
 
+  After pushing to GitHub:
+    - Connect the repo on https://codecov.io and add the CODECOV_TOKEN secret
+    - Enable Settings -> Security -> Private vulnerability reporting
+
 # ---------------------------------------------------------------------------
 # Questions
 # ---------------------------------------------------------------------------

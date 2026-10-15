@@ -14,7 +14,8 @@ A [Copier](https://copier.readthedocs.io/en/stable/) template for standard Pytho
 | Type checking   | [mypy](https://mypy.readthedocs.io/) in `strict` mode over `src/` and `tests/`                  |
 | Git hooks       | [pre-commit](https://pre-commit.com/): ruff check/format, mypy, file hygiene hooks, `uv-lock`  |
 | Tests           | [pytest](https://docs.pytest.org/) + [pytest-cov](https://pytest-cov.readthedocs.io/), branch coverage and a configurable `fail_under` |
-| CI/CD           | GitHub Actions: lint job + test matrix from the minimum Python version up to 3.14, `uv sync --locked`, actions pinned by commit SHA |
+| CI/CD           | GitHub Actions: lint job + test matrix from the minimum Python version up to 3.14, `uv sync --locked`, coverage to [Codecov](https://codecov.io), actions pinned by commit SHA |
+| Documentation   | README (badges, overview, quickstart, configuration, development, testing, architecture), [MADR](https://adr.github.io/madr/) ADR template, CONTRIBUTING (branch naming, Conventional Commits, PR checklist), CHANGELOG ([Keep a Changelog](https://keepachangelog.com/en/1.1.0/) + SemVer), SECURITY policy and PR template |
 | Dependency bots | [Dependabot](https://docs.github.com/en/code-security/dependabot) weekly updates for actions, uv dependencies and pre-commit hooks |
 | License         | MIT, generated with the author name and year                                                    |
 
@@ -48,6 +49,11 @@ uv run pytest
 ```
 
 Commit the generated `uv.lock`: the generated CI installs with `--locked` and fails if it is missing or stale.
+
+After pushing the new project to GitHub:
+
+1. Connect the repository on [codecov.io](https://codecov.io) and add the `CODECOV_TOKEN` repository secret. Until then the coverage upload is skipped without failing CI.
+2. Enable **Settings → Security → Private vulnerability reporting** so the link in `SECURITY.md` works.
 
 ### Questions
 
@@ -104,7 +110,11 @@ python-project-template/
 my-project/
 ├── .github/
 │   ├── dependabot.yml
+│   ├── pull_request_template.md
 │   └── workflows/ci.yml
+├── docs/adr/
+│   ├── 0000-template.md
+│   └── README.md
 ├── src/my_project/
 │   ├── __init__.py
 │   └── py.typed
@@ -115,8 +125,11 @@ my-project/
 ├── .gitignore
 ├── .pre-commit-config.yaml
 ├── .python-version
+├── CHANGELOG.md
+├── CONTRIBUTING.md
 ├── LICENSE
 ├── README.md
+├── SECURITY.md
 └── pyproject.toml
 ```
 
