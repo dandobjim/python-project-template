@@ -39,7 +39,7 @@ print({{ package_name }}.__version__)
 
 ## Configuration
 
-Project and tool settings live in [`pyproject.toml`](pyproject.toml): dependencies, Ruff, mypy, pytest and coverage.
+Project and tool settings live in [`pyproject.toml`](pyproject.toml): dependencies, Ruff, {{ type_checker }}, pytest and coverage.
 
 <!-- Document runtime configuration here. Example: -->
 
@@ -61,7 +61,11 @@ uv run pre-commit install    # run checks automatically on every commit
 | Lint                     | `uv run ruff check .`               |
 | Lint and autofix         | `uv run ruff check --fix .`         |
 | Format                   | `uv run ruff format .`              |
+{% if type_checker == "mypy" -%}
 | Type check (strict)      | `uv run mypy`                       |
+{%- else -%}
+| Type check (strict)      | `uv run pyrefly check`              |
+{%- endif %}
 | Run all pre-commit hooks | `uv run pre-commit run --all-files` |
 | Update hook versions     | `uv run pre-commit autoupdate`      |
 | Add a dependency         | `uv add <package>`                  |
@@ -81,7 +85,7 @@ Tests fail if coverage drops below **{{ coverage_threshold }}%** (`[tool.coverag
 
 GitHub Actions runs on every push to `main` and on every pull request:
 
-- **Lint**: all pre-commit hooks (ruff check, ruff format, mypy `--strict`, file hygiene).
+- **Lint**: all pre-commit hooks (ruff check, ruff format, {{ type_checker }} in strict mode, file hygiene).
 - **Test**: `pytest` on every supported Python version ({{ python_version }}–3.14); coverage is uploaded to [Codecov](https://codecov.io/gh/{{ github_username }}/{{ project_name }}).
 
 Actions are pinned to commit SHAs and [Dependabot](.github/dependabot.yml) opens weekly PRs to update actions, Python dependencies and pre-commit hooks.

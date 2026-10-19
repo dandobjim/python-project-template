@@ -76,6 +76,16 @@ python_version:
     - "3.14"
   default: "3.14"
 
+type_checker:
+  type: str
+  help: >-
+    Static type checker, in strict mode, used by pre-commit and CI.
+    mypy: reference implementation with plugins (Django, Pydantic). pyrefly: much faster, no plugins.
+  choices:
+    mypy: mypy
+    pyrefly: pyrefly
+  default: mypy
+
 coverage_threshold:
   type: int
   help: Minimum test coverage percentage (pytest fails below it)

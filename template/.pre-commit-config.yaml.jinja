@@ -24,12 +24,12 @@ repos:
     hooks:
       - id: uv-lock
 
-  # Runs inside the project environment so mypy sees the real dependencies
+  # Runs inside the project environment so {{ type_checker }} sees the real dependencies
   - repo: local
     hooks:
-      - id: mypy
-        name: mypy
-        entry: uv run mypy
+      - id: {{ type_checker }}
+        name: {{ type_checker }}
+        entry: uv run {{ "mypy" if type_checker == "mypy" else "pyrefly check" }}
         language: system
         pass_filenames: false
         types: [python]

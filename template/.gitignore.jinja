@@ -23,7 +23,9 @@ htmlcov/
 
 # Tooling caches
 .ruff_cache/
+{%- if type_checker == "mypy" %}
 .mypy_cache/
+{%- endif %}
 
 # IDE / OS
 .idea/

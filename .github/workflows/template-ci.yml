@@ -15,12 +15,13 @@ concurrency:
 
 jobs:
   render-and-test:
-    name: Render & test (Python ${{ matrix.python_version }})
+    name: Render & test (Python ${{ matrix.python_version }}, ${{ matrix.type_checker }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         python_version: ["3.11", "3.12", "3.13", "3.14"]
+        type_checker: [mypy, pyrefly]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -41,6 +42,7 @@ jobs:
           --data author_email=ci@example.com
           --data github_username=ci
           --data python_version=${{ matrix.python_version }}
+          --data type_checker=${{ matrix.type_checker }}
           . "$RUNNER_TEMP/demo-app"
 
       - name: Test generated project

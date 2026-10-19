@@ -7,3 +7,4 @@ ADRs use [MADR 4](https://adr.github.io/madr/); start from [`template/docs/adr/0
 | ADR | Title | Status |
 | --- | ----- | ------ |
 | [0001](0001-use-uv-and-ruff-for-tooling.md) | Use uv, Ruff and mypy as the default tooling of generated projects | accepted |
+| [0002](0002-offer-pyrefly-as-optional-type-checker.md) | Offer pyrefly as an optional type checker | accepted |

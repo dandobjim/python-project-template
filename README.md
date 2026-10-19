@@ -11,8 +11,8 @@ A [Copier](https://copier.readthedocs.io/en/stable/) template for standard Pytho
 | --------------- | ----------------------------------------------------------------------------------------------- |
 | Packaging       | [uv](https://docs.astral.sh/uv/) + `uv_build` backend, PEP 621 `pyproject.toml`, `src/` layout   |
 | Linting/format  | [Ruff](https://docs.astral.sh/ruff/) (pycodestyle, pyflakes, isort, bugbear, pyupgrade, bandit, pathlib, …) |
-| Type checking   | [mypy](https://mypy.readthedocs.io/) in `strict` mode over `src/` and `tests/`                  |
-| Git hooks       | [pre-commit](https://pre-commit.com/): ruff check/format, mypy, file hygiene hooks, `uv-lock`  |
+| Type checking   | [mypy](https://mypy.readthedocs.io/) (default) or [pyrefly](https://pyrefly.org/), strict mode over `src/` and `tests/` |
+| Git hooks       | [pre-commit](https://pre-commit.com/): ruff check/format, the chosen type checker, file hygiene hooks, `uv-lock` |
 | Tests           | [pytest](https://docs.pytest.org/) + [pytest-cov](https://pytest-cov.readthedocs.io/), branch coverage and a configurable `fail_under` |
 | CI/CD           | GitHub Actions: lint job + test matrix from the minimum Python version up to 3.14, `uv sync --locked`, coverage to [Codecov](https://codecov.io), actions pinned by commit SHA |
 | Documentation   | README (badges, overview, quickstart, configuration, development, testing, architecture), [MADR](https://adr.github.io/madr/) ADR template, CONTRIBUTING (branch naming, Conventional Commits, PR checklist), CHANGELOG ([Keep a Changelog](https://keepachangelog.com/en/1.1.0/) + SemVer), SECURITY policy and PR template |
@@ -66,10 +66,29 @@ After pushing the new project to GitHub:
 | `author_email`        | Author email                                                       | —                             |
 | `github_username`     | GitHub user/org hosting the repo (badges and URLs)                 | —                             |
 | `python_version`      | Minimum Python version (`3.11`–`3.14`); defines the CI matrix      | `3.14`                        |
+| `type_checker`        | Static type checker in strict mode: `mypy` or `pyrefly`            | `mypy`                        |
 | `coverage_threshold`  | Minimum coverage percentage before pytest fails                    | `80`                          |
 | `copyright_year`      | Year in the MIT license (stored, so it never changes on update)    | current year                  |
 
 Answers can be passed non-interactively with `--data key=value` (and `--defaults` for the rest).
+
+### Choosing a type checker
+
+Both options run in strict mode over `src/` and `tests/`, as a local pre-commit hook inside the project environment (so they see the real dependencies) and in the CI lint job.
+
+| Type checker | Command                | Config in `pyproject.toml`               | Choose it when                                                                                   |
+| ------------ | ---------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `mypy`       | `uv run mypy`          | `[tool.mypy]`, `strict = true`           | You need mypy plugins (Django, Pydantic, SQLAlchemy…) or want the reference implementation        |
+| `pyrefly`    | `uv run pyrefly check` | `[tool.pyrefly]`, `preset = "strict"`    | You want much faster checks and an editor language server that matches CI; no plugins needed      |
+
+The strict modes are not equivalent: for example, pyrefly infers return types instead of requiring annotations on them, while mypy `--strict` requires annotations on every function. See [ADR-0002](docs/adr/0002-offer-pyrefly-as-optional-type-checker.md) for the full tradeoffs.
+
+To switch an existing project, re-answer the question on update and refresh the lockfile:
+
+```bash
+uvx copier update --data type_checker=pyrefly
+uv lock
+```
 
 ### Updating an existing project
 
@@ -144,7 +163,7 @@ my-project/
 
 ## Testing the template
 
-`Template CI` runs on every push and pull request: it renders the template for each Python version from 3.11 to 3.14 and, inside the generated project, runs `uv lock`, `uv sync --locked`, `pytest` and every pre-commit hook (ruff, mypy, …).
+`Template CI` runs on every push and pull request: it renders the template for each Python version from 3.11 to 3.14 and each type checker (`mypy`, `pyrefly`) and, inside the generated project, runs `uv lock`, `uv sync --locked`, `pytest` and every pre-commit hook (ruff, the type checker, …).
 
 To do the same locally (`--vcs-ref HEAD` renders your working commit instead of the latest tag; uncommitted changes are included as a dirty copy):
 
@@ -154,6 +173,7 @@ uvx copier copy --defaults --vcs-ref HEAD \
   --data author_name="Jane Doe" \
   --data author_email=jane@example.com \
   --data github_username=jane \
+  --data type_checker=pyrefly \
   . /tmp/demo-app
 
 cd /tmp/demo-app && git init && git add -A \

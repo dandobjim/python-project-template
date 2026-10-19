@@ -62,7 +62,11 @@ Run the same checks CI runs before pushing:
 uv run pytest                        # tests + coverage (must stay >= {{ coverage_threshold }}%)
 uv run ruff check .                  # lint
 uv run ruff format --check .         # formatting
+{% if type_checker == "mypy" -%}
 uv run mypy                          # strict type checking
+{%- else -%}
+uv run pyrefly check                 # strict type checking
+{%- endif %}
 uv run pre-commit run --all-files    # everything above plus file hygiene
 ```
 

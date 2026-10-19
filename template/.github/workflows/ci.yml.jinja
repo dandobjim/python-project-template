@@ -29,7 +29,7 @@ jobs:
       - name: Install dependencies
         run: uv sync --locked
 
-      - name: Run pre-commit (ruff, mypy, file hygiene)
+      - name: Run pre-commit (ruff, {{ type_checker }}, file hygiene)
         run: uv run --locked pre-commit run --all-files --show-diff-on-failure
 
   test:

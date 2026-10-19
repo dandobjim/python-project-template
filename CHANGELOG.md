@@ -8,6 +8,14 @@ Generated projects pick up these versions with `uvx copier update`.
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-10-19
+
+### Added
+
+- `type_checker` question: generated projects use mypy (default) or pyrefly, both in strict mode, with the matching dev dependency, `pyproject.toml` section, pre-commit hook and docs.
+- Template CI renders and tests every combination of Python version and type checker.
+- ADR-0002 documenting pyrefly as an optional type checker.
+
 ## [0.3.0] - 2026-10-15
 
 ### Added
@@ -42,7 +50,8 @@ Generated projects pick up these versions with `uvx copier update`.
 - `Template CI` workflow that renders the template on Python 3.11–3.14 and runs the full toolchain.
 - MIT license.
 
-[Unreleased]: https://github.com/dandobjim/python-project-template/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/dandobjim/python-project-template/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/dandobjim/python-project-template/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/dandobjim/python-project-template/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/dandobjim/python-project-template/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/dandobjim/python-project-template/releases/tag/v0.1.0

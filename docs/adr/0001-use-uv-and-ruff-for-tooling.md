@@ -144,6 +144,8 @@ Microsoft's type checker, written in TypeScript; the engine behind Pylance in VS
 
 ## More Information
 
+- [ADR-0002](0002-offer-pyrefly-as-optional-type-checker.md) adds pyrefly as an opt-in alternative; mypy stays the default chosen here.
+
 - Revisit this decision if: uv or Ruff change license or stop being maintained as open source after the acquisition; uv reaches 1.0 (re-evaluate the `uv_build` upper bound); a generated project needs extension modules; or Astral's type checker `ty` becomes stable (consider it, weighing it against even more vendor concentration).
 - [OpenAI to acquire Astral: The New Stack](https://thenewstack.io/openai-astral-acquisition/) · [Simon Willison: thoughts on OpenAI acquiring Astral](https://simonw.substack.com/p/thoughts-on-openai-acquiring-astral)
 - [uv build backend documentation](https://docs.astral.sh/uv/concepts/build-backend/) · [PEP 751: lockfile format](https://peps.python.org/pep-0751/)
