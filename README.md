@@ -14,7 +14,7 @@ A [Copier](https://copier.readthedocs.io/en/stable/) template for standard Pytho
 | Type checking   | [mypy](https://mypy.readthedocs.io/) (default) or [pyrefly](https://pyrefly.org/), strict mode over `src/` and `tests/` |
 | Git hooks       | [pre-commit](https://pre-commit.com/): ruff check/format, the chosen type checker, file hygiene hooks, `uv-lock` |
 | Tests           | [pytest](https://docs.pytest.org/) + [pytest-cov](https://pytest-cov.readthedocs.io/), branch coverage and a configurable `fail_under` |
-| CI/CD           | GitHub Actions: lint job + test matrix from the minimum Python version up to 3.14, `uv sync --locked`, coverage to [Codecov](https://codecov.io), actions pinned by commit SHA |
+| CI/CD           | GitHub Actions: lint job + test matrix from the minimum Python version up to 3.15, `uv sync --locked`, coverage to [Codecov](https://codecov.io), actions pinned by commit SHA |
 | Documentation   | README (badges, overview, quickstart, configuration, development, testing, architecture), [MADR](https://adr.github.io/madr/) ADR template, CONTRIBUTING (branch naming, Conventional Commits, PR checklist), CHANGELOG ([Keep a Changelog](https://keepachangelog.com/en/1.1.0/) + SemVer), SECURITY policy and PR template |
 | Dependency bots | [Dependabot](https://docs.github.com/en/code-security/dependabot) weekly updates for actions, uv dependencies and pre-commit hooks |
 | License         | MIT, generated with the author name and year                                                    |
@@ -65,7 +65,7 @@ After pushing the new project to GitHub:
 | `author_name`         | Author full name (also used in the license)                        | —                             |
 | `author_email`        | Author email                                                       | —                             |
 | `github_username`     | GitHub user/org hosting the repo (badges and URLs)                 | —                             |
-| `python_version`      | Minimum Python version (`3.11`–`3.14`); defines the CI matrix      | `3.14`                        |
+| `python_version`      | Minimum Python version (`3.11`–`3.15`); defines the CI matrix      | `3.15`                        |
 | `type_checker`        | Static type checker in strict mode: `mypy` or `pyrefly`            | `mypy`                        |
 | `coverage_threshold`  | Minimum coverage percentage before pytest fails                    | `80`                          |
 | `copyright_year`      | Year in the MIT license (stored, so it never changes on update)    | current year                  |
@@ -163,7 +163,7 @@ my-project/
 
 ## Testing the template
 
-`Template CI` runs on every push and pull request: it renders the template for each Python version from 3.11 to 3.14 and each type checker (`mypy`, `pyrefly`) and, inside the generated project, runs `uv lock`, `uv sync --locked`, `pytest` and every pre-commit hook (ruff, the type checker, …).
+`Template CI` runs on every push and pull request: it renders the template for each Python version from 3.11 to 3.15 and each type checker (`mypy`, `pyrefly`) and, inside the generated project, runs `uv lock`, `uv sync --locked`, `pytest` and every pre-commit hook (ruff, the type checker, …).
 
 To do the same locally (`--vcs-ref HEAD` renders your working commit instead of the latest tag; uncommitted changes are included as a dirty copy):
 

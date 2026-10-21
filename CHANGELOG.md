@@ -8,6 +8,15 @@ Generated projects pick up these versions with `uvx copier update`.
 
 ## [Unreleased]
 
+### Added
+
+- Python 3.15 as an option for `python_version`; generated CI matrices and `pyproject.toml` classifiers now run up to 3.15.
+- `Template CI` renders and tests the template on Python 3.15.
+
+### Changed
+
+- Default `python_version` is now `3.15` (was `3.14`).
+
 ## [0.4.0] - 2026-10-19
 
 ### Added

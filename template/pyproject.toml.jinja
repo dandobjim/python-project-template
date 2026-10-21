@@ -10,7 +10,7 @@ authors = [{ name = "{{ author_name }}", email = "{{ author_email }}" }]
 requires-python = ">={{ python_version }}"
 classifiers = [
     "Programming Language :: Python :: 3",
-{%- for minor in range(min_minor, 15) %}
+{%- for minor in range(min_minor, 16) %}
     "Programming Language :: Python :: 3.{{ minor }}",
 {%- endfor %}
     "Operating System :: OS Independent",

@@ -48,7 +48,7 @@ Both options use the same pattern as ADR-0001: a dev dependency in the project e
 
 ### Confirmation
 
-`Template CI` renders the template for every Python version (3.11–3.14) and every `type_checker` value, then runs `uv lock`, `uv sync --locked`, `pytest` and every pre-commit hook in the generated project. A failure in either type checker fails the matrix.
+`Template CI` renders the template for every Python version (3.11–3.15) and every `type_checker` value, then runs `uv lock`, `uv sync --locked`, `pytest` and every pre-commit hook in the generated project. A failure in either type checker fails the matrix.
 
 ## Pros and Cons of the Options
 

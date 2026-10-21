@@ -57,7 +57,7 @@ Chosen options: **uv** (with the `uv_build` backend), **Ruff** and **mypy** in s
 
 ### Confirmation
 
-- `Template CI` renders the template on Python 3.11–3.14 and runs `uv lock`, `uv sync --locked`, `pytest` and every pre-commit hook (ruff check, ruff format, mypy) in the generated project; it fails if any of the chosen tools stops working.
+- `Template CI` renders the template on Python 3.11–3.15 and runs `uv lock`, `uv sync --locked`, `pytest` and every pre-commit hook (ruff check, ruff format, mypy) in the generated project; it fails if any of the chosen tools stops working.
 - Generated projects contain no configuration for black, isort, flake8, Poetry or pip-tools; reviews of template changes reject reintroducing them without a superseding ADR.
 - Dependabot keeps uv, Ruff and mypy versions current, so breaking changes in 0.x releases show up as a failing PR instead of a surprise.
 

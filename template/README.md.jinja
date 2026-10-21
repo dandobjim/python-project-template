@@ -86,7 +86,7 @@ Tests fail if coverage drops below **{{ coverage_threshold }}%** (`[tool.coverag
 GitHub Actions runs on every push to `main` and on every pull request:
 
 - **Lint**: all pre-commit hooks (ruff check, ruff format, {{ type_checker }} in strict mode, file hygiene).
-- **Test**: `pytest` on every supported Python version ({{ python_version }}–3.14); coverage is uploaded to [Codecov](https://codecov.io/gh/{{ github_username }}/{{ project_name }}).
+- **Test**: `pytest` on every supported Python version ({{ python_version }}–3.15); coverage is uploaded to [Codecov](https://codecov.io/gh/{{ github_username }}/{{ project_name }}).
 
 Actions are pinned to commit SHAs and [Dependabot](.github/dependabot.yml) opens weekly PRs to update actions, Python dependencies and pre-commit hooks.
 
